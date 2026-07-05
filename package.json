@@ -1,0 +1,322 @@
+{
+  "name": "repovisor",
+  "displayName": "Repovisor AI - Code Review",
+  "description": "AI-powered pull request review inside VS Code. Review code with multiple LLM providers.",
+  "version": "0.4.0",
+  "repository": "https://github.com/NIHAR-SARKAR/Repovisor-VsCode-Extension",
+  "publisher": "NIHAR-SARKAR",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "galleryBanner": {
+    "color": "#229977",
+    "theme": "dark"
+  },
+  "icon": "logo.png",
+  "categories": [
+    "Machine Learning",
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "code review",
+    "ai",
+    "llm",
+    "github",
+    "gitlab",
+    "pull request",
+    "diff"
+  ],
+  "activationEvents": [
+    "onCommand:repovisor.openPanel",
+    "onCommand:repovisor.openCodeReviewer",
+    "onView:repovisorSidebar",
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "repovisor.openPanel",
+        "title": "Open Repovisor Panel",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "repovisor.reviewCurrentFile",
+        "title": "Repovisor: Review Current File",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "repovisor.reviewSelection",
+        "title": "Repovisor: Review Selection",
+        "icon": "$(selection)"
+      },
+      {
+        "command": "repovisor.quickReview",
+        "title": "Repovisor: Quick PR Review",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "repovisor.openCodeReviewer",
+        "title": "Open Code Reviewer",
+        "icon": "$(open-preview)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "repovisor.openCodeReviewer",
+          "when": "view == repovisorSidebar",
+          "group": "navigation@1"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "repovisor.reviewSelection",
+          "group": "9_cutcopypaste@5",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "repovisor.reviewCurrentFile",
+          "group": "9_cutcopypaste@6"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "repovisor.reviewCurrentFile",
+          "group": "2_workspace@10",
+          "when": "explorerResourceIsFile"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "repovisor",
+          "title": "Repovisor AI",
+          "icon": "media/repovisor.svg"
+        }
+      ]
+    },
+    "views": {
+      "repovisor": [
+        {
+          "id": "repovisorSidebar",
+          "name": "Review Hub",
+          "icon": "media/repovisor.svg",
+          "contextualTitle": "Repovisor AI"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Repovisor AI",
+      "properties": {
+        "repovisor.githubToken": {
+          "type": "string",
+          "default": "",
+          "description": "GitHub Personal Access Token with repo scope",
+          "scope": "application"
+        },
+        "repovisor.gitlabToken": {
+          "type": "string",
+          "default": "",
+          "description": "GitLab Personal Access Token",
+          "scope": "application"
+        },
+        "repovisor.gitlabUrl": {
+          "type": "string",
+          "default": "https://gitlab.com",
+          "description": "GitLab instance URL",
+          "scope": "application"
+        },
+        "repovisor.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API Key",
+          "scope": "application"
+        },
+        "repovisor.anthropicApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Anthropic Claude API Key",
+          "scope": "application"
+        },
+        "repovisor.moonshotApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Moonshot (Kimi) API Key",
+          "scope": "application"
+        },
+        "repovisor.deepseekApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "DeepSeek API Key",
+          "scope": "application"
+        },
+        "repovisor.activeProvider": {
+          "type": "string",
+          "default": "",
+          "enum": [
+            "",
+            "openai",
+            "anthropic",
+            "moonshot",
+            "deepseek",
+            "azure"
+          ],
+          "description": "Active AI provider for reviews (single provider mode)"
+        },
+        "repovisor.defaultProvider": {
+          "type": "string",
+          "default": "openai",
+          "enum": [
+            "openai",
+            "anthropic",
+            "moonshot",
+            "deepseek",
+            "azure"
+          ],
+          "description": "Deprecated: use repovisor.activeProvider instead"
+        },
+        "repovisor.openaiBaseUrl": {
+          "type": "string",
+          "default": "https://api.openai.com/v1",
+          "description": "OpenAI API base URL"
+        },
+        "repovisor.anthropicBaseUrl": {
+          "type": "string",
+          "default": "https://api.anthropic.com",
+          "description": "Anthropic API base URL"
+        },
+        "repovisor.moonshotBaseUrl": {
+          "type": "string",
+          "default": "https://api.moonshot.cn/v1",
+          "description": "Moonshot API base URL"
+        },
+        "repovisor.deepseekBaseUrl": {
+          "type": "string",
+          "default": "https://api.deepseek.com",
+          "description": "DeepSeek API base URL"
+        },
+        "repovisor.azureBaseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI base URL override"
+        },
+        "repovisor.azureUseBearerAuth": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use Bearer token auth for Azure OpenAI"
+        },
+        "repovisor.defaultProfile": {
+          "type": "string",
+          "default": "standard",
+          "enum": [
+            "fast",
+            "standard",
+            "deep"
+          ],
+          "description": "Default review profile"
+        },
+        "repovisor.autoPostComments": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically post review comments to GitHub/GitLab"
+        },
+        "repovisor.enableRules": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable custom rule engine"
+        },
+        "repovisor.maxContextLines": {
+          "type": "number",
+          "default": 5,
+          "description": "Number of context lines around changes"
+        },
+        "repovisor.modelConfig": {
+          "type": "object",
+          "default": {},
+          "description": "Model configuration (reasoning effort, context window, etc.)"
+        },
+        "repovisor.customHeaders": {
+          "type": "object",
+          "default": {},
+          "description": "Per-provider custom HTTP headers (keyed by provider alias)",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "repovisor.providerModels": {
+          "type": "object",
+          "default": {},
+          "description": "Per-provider model overrides (keyed by provider alias)",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "repovisor.azureApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI API Key",
+          "scope": "application"
+        },
+        "repovisor.azureEndpoint": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI Endpoint URL",
+          "scope": "application"
+        },
+        "repovisor.azureDeployment": {
+          "type": "string",
+          "default": "gpt-4o",
+          "description": "Azure OpenAI Deployment Name",
+          "scope": "application"
+        },
+        "repovisor.azureApiVersion": {
+          "type": "string",
+          "default": "2024-12-01-preview",
+          "description": "Azure OpenAI API Version",
+          "scope": "application"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "repovisor.openPanel",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "repovisor.quickReview",
+        "key": "ctrl+shift+q",
+        "mac": "cmd+shift+q"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile && npm run build:webview",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "build:webview": "cd webview-ui && npm run build",
+    "dev:webview": "cd webview-ui && npm run dev",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "20.x",
+    "@types/vscode": "^1.85.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@vscode/vsce": "^2.22.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.1"
+  }
+}

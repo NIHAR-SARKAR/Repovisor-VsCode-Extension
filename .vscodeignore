@@ -1,0 +1,15 @@
+.vscode/**
+.vscode-test/**
+src/**
+webview-ui/**
+.gitignore
+.yarnrc
+**/tsconfig.json
+**/.eslintrc.json
+**/*.map
+**/*.ts
+out/test/**
+node_modules/**
+!node_modules/better-sqlite3/**
+webview-ui/**
+!webview-ui/dist/**
