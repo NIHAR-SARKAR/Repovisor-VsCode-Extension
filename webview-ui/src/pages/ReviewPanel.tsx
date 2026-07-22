@@ -1,20 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { vscode, ProviderStatus } from '../App';
 import { Search, Server, Sparkles, Cpu, AlertTriangle } from 'lucide-react';
+
+interface PrefillData {
+  repo: string;
+  prNumber: number;
+  platform: 'github' | 'gitlab';
+}
 
 interface ReviewPanelProps {
   onReview: (data: any) => void;
   providerStatus: ProviderStatus | null;
   isSidebarMode?: boolean;
   isLoading?: boolean;
+  prefillData?: PrefillData | null;
+  onPrefillApplied?: () => void;
 }
 
-export function ReviewPanel({ onReview, providerStatus, isSidebarMode, isLoading }: ReviewPanelProps) {
+export function ReviewPanel({ onReview, providerStatus, isSidebarMode, isLoading, prefillData, onPrefillApplied }: ReviewPanelProps) {
   const [repo, setRepo] = useState('');
   const [prNumber, setPrNumber] = useState('');
   const [platform, setPlatform] = useState<'github' | 'gitlab'>('github');
   const [profile, setProfile] = useState<'fast' | 'standard' | 'deep'>('standard');
   const [autoPost, setAutoPost] = useState(false);
+
+  useEffect(() => {
+    if (prefillData) {
+      setRepo(prefillData.repo);
+      setPrNumber(String(prefillData.prNumber));
+      setPlatform(prefillData.platform);
+      onPrefillApplied?.();
+    }
+  }, [prefillData, onPrefillApplied]);
 
   const activeProvider = providerStatus?.providers.find(p => p.alias === providerStatus?.activeProvider);
 

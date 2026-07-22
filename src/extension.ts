@@ -7,11 +7,14 @@ import { MemoryHistoryService } from './services/MemoryHistoryService';
 import { GitHubService } from './github/GitHubService';
 import { GitLabService } from './gitlab/GitLabService';
 import { SidebarProvider } from './panels/SidebarProvider';
+import { HistoryTreeProvider } from './panels/HistoryTreeProvider';
+import { QuickActionsProvider } from './panels/QuickActionsProvider';
 import { ReviewCodeLensProvider } from './providers/ReviewCodeLensProvider';
 import { Logger } from './utils/logger';
 
 let reviewService: ReviewService;
 let sidebarProvider: SidebarProvider;
+let historyTreeProvider: HistoryTreeProvider;
 let historyService: IHistoryService;
 
 export function activate(context: vscode.ExtensionContext) {
@@ -39,6 +42,20 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.registerWebviewViewProvider(
             'repovisorSidebar',
             sidebarProvider,
+            { webviewOptions: { retainContextWhenHidden: true } }
+        )
+    );
+
+    historyTreeProvider = new HistoryTreeProvider(reviewService);
+    context.subscriptions.push(
+        vscode.window.registerTreeDataProvider('repovisor.history', historyTreeProvider)
+    );
+
+    const quickActionsProvider = new QuickActionsProvider(context.extensionUri, configService);
+    context.subscriptions.push(
+        vscode.window.registerWebviewViewProvider(
+            'repovisor.quickActions',
+            quickActionsProvider,
             { webviewOptions: { retainContextWhenHidden: true } }
         )
     );
@@ -136,6 +153,15 @@ export function activate(context: vscode.ExtensionContext) {
         });
     });
 
+    const refreshHistoryCmd = vscode.commands.registerCommand('repovisor.refreshHistory', () => {
+        historyTreeProvider.refresh();
+    });
+
+    const openPrefilledReviewCmd = vscode.commands.registerCommand('repovisor.openPrefilledReview', (repo: string, prNumber: number, platform: 'github' | 'gitlab') => {
+        RepovisorPanel.createOrShow(context.extensionUri, reviewService, configService);
+        RepovisorPanel.currentPanel?.showReviewForm(repo, prNumber, platform);
+    });
+
     const quickReviewCmd = vscode.commands.registerCommand('repovisor.quickReview', async () => {
         const repoInput = await vscode.window.showInputBox({
             prompt: 'Enter repository (owner/repo)',
@@ -191,6 +217,7 @@ export function activate(context: vscode.ExtensionContext) {
                 vscode.window.showInformationMessage(
                     `✅ PR #${prInput} review complete: ${result.findings.length} findings`
                 );
+                historyTreeProvider.refresh();
             } catch (error) {
                 vscode.window.showErrorMessage(`PR review failed: ${error}`);
             }
@@ -202,7 +229,9 @@ export function activate(context: vscode.ExtensionContext) {
         openCodeReviewerCmd,
         reviewFileCmd,
         reviewSelectionCmd,
-        quickReviewCmd
+        quickReviewCmd,
+        refreshHistoryCmd,
+        openPrefilledReviewCmd
     );
 
     vscode.commands.executeCommand('setContext', 'repovisor:enabled', true);

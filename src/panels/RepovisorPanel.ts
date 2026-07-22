@@ -330,6 +330,13 @@ export class RepovisorPanel {
         });
     }
 
+    public showReviewForm(repo: string, prNumber: number, platform: 'github' | 'gitlab') {
+        this._panel.webview.postMessage({
+            command: 'prefillReview',
+            data: { repo, prNumber, platform }
+        });
+    }
+
     private _update() {
         const webview = this._panel.webview;
         webview.html = this._getHtmlForWebview(webview);

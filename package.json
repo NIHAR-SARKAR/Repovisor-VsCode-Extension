@@ -2,7 +2,7 @@
   "name": "repovisor",
   "displayName": "Repovisor AI - Code Review",
   "description": "AI-powered pull request review inside VS Code. Review code with multiple LLM providers.",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "repository": "https://github.com/NIHAR-SARKAR/Repovisor-VsCode-Extension",
   "publisher": "NIHAR-SARKAR",
   "engines": {
@@ -31,6 +31,8 @@
     "onCommand:repovisor.openPanel",
     "onCommand:repovisor.openCodeReviewer",
     "onView:repovisorSidebar",
+    "onView:repovisor.history",
+    "onView:repovisor.quickActions",
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
@@ -60,6 +62,15 @@
         "command": "repovisor.openCodeReviewer",
         "title": "Open Code Reviewer",
         "icon": "$(open-preview)"
+      },
+      {
+        "command": "repovisor.refreshHistory",
+        "title": "Refresh Review History",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "repovisor.openPrefilledReview",
+        "title": "Open Prefilled Review"
       }
     ],
     "menus": {
@@ -67,6 +78,11 @@
         {
           "command": "repovisor.openCodeReviewer",
           "when": "view == repovisorSidebar",
+          "group": "navigation@1"
+        },
+        {
+          "command": "repovisor.refreshHistory",
+          "when": "view == repovisor.history",
           "group": "navigation@1"
         }
       ],
@@ -101,8 +117,22 @@
     "views": {
       "repovisor": [
         {
+          "id": "repovisor.quickActions",
+          "name": "Quick Actions",
+          "type": "webview",
+          "icon": "media/repovisor.svg",
+          "contextualTitle": "Repovisor AI"
+        },
+        {
+          "id": "repovisor.history",
+          "name": "Review History",
+          "icon": "media/repovisor.svg",
+          "contextualTitle": "Repovisor AI"
+        },
+        {
           "id": "repovisorSidebar",
           "name": "Review Hub",
+          "type": "webview",
           "icon": "media/repovisor.svg",
           "contextualTitle": "Repovisor AI"
         }
@@ -307,9 +337,9 @@
     "package": "vsce package"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "20.x",
     "@types/vscode": "^1.85.0",
-    "@types/better-sqlite3": "^7.6.13",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "@vscode/vsce": "^2.22.0",
@@ -317,6 +347,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@vscode/codicons": "^0.0.45",
     "better-sqlite3": "^13.0.1"
   }
 }

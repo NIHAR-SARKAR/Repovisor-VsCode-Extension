@@ -67,7 +67,12 @@ function App() {
   const [platformTokens, setPlatformTokens] = useState<PlatformTokens>({ githubToken: '', gitlabToken: '' });
   const [providerTest, setProviderTest] = useState<{ success: boolean; message?: string; error?: string } | null>(null);
   const [postReviewLoading, setPostReviewLoading] = useState(false);
+  const [prefillData, setPrefillData] = useState<{ repo: string; prNumber: number; platform: 'github' | 'gitlab' } | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
+
+  const handlePrefillApplied = useCallback(() => {
+    setPrefillData(null);
+  }, []);
 
   const showToast = useCallback((type: Toast['type'], message: string) => {
     const id = Math.random().toString(36).substring(2, 9);
@@ -108,6 +113,10 @@ function App() {
         case 'showSelectionResult':
           setReviewResult(message.data.result);
           setActiveSection('results');
+          break;
+        case 'prefillReview':
+          setPrefillData(message.data);
+          setActiveSection('review');
           break;
         case 'historyData':
           // handled by HistoryPanel
@@ -214,6 +223,8 @@ function App() {
             isSidebarMode={isSidebarMode}
             providerStatus={providerStatus}
             isLoading={isLoading}
+            prefillData={prefillData}
+            onPrefillApplied={handlePrefillApplied}
             onReview={(data) => { setIsLoading(true); setError(null); vscode.postMessage({ command: 'review', data }); }}
           />
         )}
