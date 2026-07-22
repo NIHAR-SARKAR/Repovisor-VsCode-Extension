@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[var(--vscode-editor-background)] text-[var(--vscode-foreground)] font-sans;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-[var(--vscode-button-background)] text-[var(--vscode-button-foreground)] 
+           rounded hover:bg-[var(--vscode-button-hoverBackground)] transition-colors cursor-pointer
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply px-4 py-2 bg-[var(--vscode-button-secondaryBackground)] text-[var(--vscode-button-secondaryForeground)]
+           rounded hover:bg-[var(--vscode-button-secondaryHoverBackground)] transition-colors cursor-pointer
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .input-field {
+    @apply w-full px-3 py-2 bg-[var(--vscode-input-background)] text-[var(--vscode-input-foreground)]
+           border border-[var(--vscode-input-border)] rounded focus:outline-none focus:ring-2 
+           focus:ring-[var(--vscode-focusBorder)];
+  }
+  .card {
+    @apply bg-[var(--vscode-editor-inactiveSelectionBackground)] rounded-lg p-4 
+           border border-[var(--vscode-panel-border)];
+  }
+  .severity-critical { @apply text-red-500 font-bold; }
+  .severity-high { @apply text-orange-500 font-semibold; }
+  .severity-medium { @apply text-yellow-500; }
+  .severity-low { @apply text-blue-400; }
+
+  .select-field {
+    @apply w-full px-3 py-2 bg-[var(--vscode-input-background)] text-[var(--vscode-input-foreground)]
+           border border-[var(--vscode-input-border)] rounded focus:outline-none focus:ring-2
+           focus:ring-[var(--vscode-focusBorder)];
+  }
+
+  .checkbox {
+    @apply w-4 h-4 rounded border-[var(--vscode-input-border)] bg-[var(--vscode-input-background)]
+           text-[var(--vscode-button-background)] focus:ring-[var(--vscode-focusBorder)];
+  }
+
+  .section-title {
+    @apply text-xl font-semibold text-[var(--vscode-foreground)];
+  }
+
+  .subsection-header {
+    @apply flex items-center gap-2 text-sm font-semibold text-[var(--vscode-foreground)] mb-3;
+  }
+
+  .form-label {
+    @apply block text-sm font-semibold text-[var(--vscode-foreground)] mb-1;
+  }
+
+  .helper-text {
+    @apply text-xs text-[var(--vscode-descriptionForeground)] mt-1;
+  }
+
+  .warning-text {
+    @apply text-xs text-[var(--vscode-errorForeground)] mt-2;
+  }
+
+  .collapsible-header {
+    @apply flex items-center gap-2 w-full text-left text-sm font-semibold py-2 px-1
+           hover:bg-[var(--vscode-list-hoverBackground)] rounded transition-colors;
+  }
+
+  .metadata-row {
+    @apply flex gap-4 text-xs text-[var(--vscode-descriptionForeground)] mt-2;
+  }
+
+  .key-value-row {
+    @apply flex gap-2 items-center mb-2;
+  }
+
+  .key-value-input {
+    @apply flex-1 px-2 py-1 text-xs bg-[var(--vscode-input-background)] text-[var(--vscode-input-foreground)]
+           border border-[var(--vscode-input-border)] rounded focus:outline-none focus:ring-1
+           focus:ring-[var(--vscode-focusBorder)];
+  }
+
+  .add-btn {
+    @apply px-2 py-1 text-xs bg-[var(--vscode-button-background)] text-[var(--vscode-button-foreground)]
+           rounded hover:bg-[var(--vscode-button-hoverBackground)] transition-colors;
+  }
+
+  .remove-btn {
+    @apply px-2 py-1 text-xs text-[var(--vscode-errorForeground)] hover:bg-[var(--vscode-toolbar-hoverBackground)]
+           rounded transition-colors;
+  }
+}
