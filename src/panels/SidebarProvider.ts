@@ -185,9 +185,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       display: inline-block;
       flex-shrink: 0;
     }
-    .status-dot.ok { background: #89d185; }
-    .status-dot.warn { background: #cca700; }
-    .status-dot.error { background: #f14c4c; }
+    .status-dot.ok { background: var(--vscode-testing-iconPassed, #89d185); }
+    .status-dot.warn { background: var(--vscode-charts-yellow, #cca700); }
+    .status-dot.error { background: var(--vscode-testing-iconFailed, #f14c4c); }
     .status-value {
       font-weight: 600;
     }
@@ -255,10 +255,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       font-weight: 700;
       text-transform: uppercase;
     }
-    .risk-critical { background: #f14c4c33; color: #f14c4c; }
-    .risk-high { background: #cca70033; color: #cca700; }
-    .risk-medium { background: #89d18533; color: #89d185; }
-    .risk-low { background: #75beff33; color: #75beff; }
+    .risk-critical { background: var(--vscode-inputValidation-errorBackground, #f14c4c33); color: var(--vscode-inputValidation-errorForeground, #f14c4c); border: 1px solid var(--vscode-inputValidation-errorBorder, #f14c4c); }
+    .risk-high { background: var(--vscode-inputValidation-warningBackground, #cca70033); color: var(--vscode-inputValidation-warningForeground, #cca700); border: 1px solid var(--vscode-inputValidation-warningBorder, #cca700); }
+    .risk-medium { background: var(--vscode-inputValidation-infoBackground, #89d18533); color: var(--vscode-inputValidation-infoForeground, #89d185); border: 1px solid var(--vscode-inputValidation-infoBorder, #89d185); }
+    .risk-low { background: var(--vscode-charts-blue, #75beff33); color: var(--vscode-charts-blue, #75beff); opacity: 0.8; }
     .button-row {
       display: flex;
       gap: 6px;
@@ -391,8 +391,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         html += '<div class="divider"></div>';
         html += '<div class="button-row">';
-        html += '<button class="button button-warning" id="btnSettings">⚙️ Settings</button>';
-        html += '<button class="button button-warning" id="btnHistory">🕒 History</button>';
+        html += '<button class="button button-secondary" id="btnSettings">⚙️ Settings</button>';
+        html += '<button class="button button-secondary" id="btnHistory">🕒 History</button>';
         html += '</div>';
         html += '<button class="button button-primary" style="width:100%;margin-top:8px;" id="btnPanel">📋 Open Review Panel</button>';
 

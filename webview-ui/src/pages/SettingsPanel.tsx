@@ -158,27 +158,25 @@ export function SettingsPanel({
 
   return (
     <div className={`space-y-6 ${isSidebarMode ? '' : 'max-w-2xl'}`}>
-      {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="section-title flex items-center gap-2">
-          <Settings className="w-6 h-6 text-blue-500" />
+          <Settings className="w-6 h-6 text-[var(--vscode-button-background)]" />
           Settings
         </h1>
         {onDone && (
           <button
             type="button"
             onClick={onDone}
-            className="px-4 py-1.5 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded transition-colors"
+            className="btn-primary px-4 py-1.5 text-sm"
           >
             Done
           </button>
         )}
       </div>
 
-      {/* API Configuration */}
       <div className="card space-y-5">
         <div className="subsection-header">
-          <Server className="w-4 h-4 text-blue-500" />
+          <Server className="w-4 h-4 text-[var(--vscode-button-background)]" />
           <span>API Configuration</span>
         </div>
 
@@ -199,7 +197,7 @@ export function SettingsPanel({
         </div>
 
         {!selectedAlias && (
-          <p className="text-sm text-yellow-300 flex items-center gap-1">
+          <p className="text-sm flex items-center gap-1 text-[var(--vscode-inputValidation-warningForeground)]">
             <AlertTriangle className="w-4 h-4" /> Select a provider above to configure it.
           </p>
         )}
@@ -210,7 +208,7 @@ export function SettingsPanel({
               <div>
                 <label className="form-label">
                   {isAzure ? 'Azure Endpoint' : 'Base URL'}
-                  {isOpenAICompatible && <span className="text-red-500 ml-1">●</span>}
+                  {isOpenAICompatible && <span style={{ color: 'var(--vscode-errorForeground)' }} className="ml-1">●</span>}
                 </label>
                 <input
                   type="text"
@@ -225,7 +223,7 @@ export function SettingsPanel({
             <div>
               <label className="form-label">
                 {keyLabel}
-                <span className="text-red-500 ml-1">●</span>
+                <span style={{ color: 'var(--vscode-errorForeground)' }} className="ml-1">●</span>
               </label>
               <input
                 type="password"
@@ -238,14 +236,14 @@ export function SettingsPanel({
                 This key is stored locally and only used to make API requests from this extension.
               </p>
               {apiKeySaved && !form.apiKey && (
-                <p className="text-xs text-green-400 mt-1 flex items-center gap-1"><Check className="w-3.5 h-3.5" /> API key is saved.</p>
+                <p className="text-xs text-[var(--vscode-testing-iconPassed)] mt-1 flex items-center gap-1"><Check className="w-3.5 h-3.5" /> API key is saved.</p>
               )}
             </div>
 
             <div>
               <label className="form-label">
                 Model ID
-                <span className="text-red-500 ml-1">●</span>
+                <span style={{ color: 'var(--vscode-errorForeground)' }} className="ml-1">●</span>
               </label>
               <input
                 type="text"
@@ -353,7 +351,11 @@ export function SettingsPanel({
             </div>
 
             {testResult && (
-              <div className={`p-2 rounded text-xs flex items-center gap-1 ${testResult.success ? 'bg-green-900/30 text-green-300' : 'bg-red-900/30 text-red-300'}`}>
+              <div className={`p-2 rounded text-xs flex items-center gap-1 ${
+                testResult.success
+                  ? 'bg-[var(--vscode-inputValidation-infoBackground)] text-[var(--vscode-inputValidation-infoForeground)]'
+                  : 'bg-[var(--vscode-inputValidation-errorBackground)] text-[var(--vscode-inputValidation-errorForeground)]'
+              }`}>
                 {testResult.success ? <Check className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
                 {testResult.success ? testResult.message : testResult.error}
               </div>
@@ -362,10 +364,9 @@ export function SettingsPanel({
         )}
       </div>
 
-      {/* Platform Tokens */}
       <div className="card space-y-4">
         <div className="subsection-header">
-          <Key className="w-4 h-4 text-blue-500" />
+          <Key className="w-4 h-4 text-[var(--vscode-button-background)]" />
           <span>Platform Tokens</span>
         </div>
         <div>
@@ -391,7 +392,11 @@ export function SettingsPanel({
         <button onClick={savePlatformTokens} className="btn-primary w-full py-2 rounded text-sm flex items-center justify-center gap-2">
           <Check className="w-4 h-4" /> Save Platform Tokens
         </button>
-        {tokensSaved && <p className="text-xs text-green-400 flex items-center gap-1"><Check className="w-3.5 h-3.5" /> Saved</p>}
+        {tokensSaved && (
+          <p className="text-xs text-[var(--vscode-testing-iconPassed)] flex items-center gap-1">
+            <Check className="w-3.5 h-3.5" /> Saved
+          </p>
+        )}
       </div>
     </div>
   );

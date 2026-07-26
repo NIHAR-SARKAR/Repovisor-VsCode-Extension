@@ -28,10 +28,10 @@
     @apply bg-[var(--vscode-editor-inactiveSelectionBackground)] rounded-lg p-4 
            border border-[var(--vscode-panel-border)];
   }
-  .severity-critical { @apply text-red-500 font-bold; }
-  .severity-high { @apply text-orange-500 font-semibold; }
-  .severity-medium { @apply text-yellow-500; }
-  .severity-low { @apply text-blue-400; }
+  .severity-critical { @apply font-bold text-[var(--vscode-charts-red)]; }
+  .severity-high { @apply font-semibold text-[var(--vscode-charts-orange)]; }
+  .severity-medium { @apply text-[var(--vscode-charts-yellow)]; }
+  .severity-low { @apply text-[var(--vscode-charts-blue)]; }
 
   .select-field {
     @apply w-full px-3 py-2 bg-[var(--vscode-input-background)] text-[var(--vscode-input-foreground)]
@@ -41,7 +41,7 @@
 
   .checkbox {
     @apply w-4 h-4 rounded border-[var(--vscode-input-border)] bg-[var(--vscode-input-background)]
-           text-[var(--vscode-button-background)] focus:ring-[var(--vscode-focusBorder)];
+           accent-[var(--vscode-button-background)] focus:ring-[var(--vscode-focusBorder)];
   }
 
   .section-title {

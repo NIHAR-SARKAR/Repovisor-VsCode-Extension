@@ -2,7 +2,7 @@
   "name": "repovisor",
   "displayName": "Repovisor AI - Code Review",
   "description": "AI-powered pull request review inside VS Code. Review code with multiple LLM providers.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": "https://github.com/NIHAR-SARKAR/Repovisor-VsCode-Extension",
   "publisher": "NIHAR-SARKAR",
   "engines": {

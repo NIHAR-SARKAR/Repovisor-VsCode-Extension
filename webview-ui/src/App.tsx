@@ -119,7 +119,6 @@ function App() {
           setActiveSection('review');
           break;
         case 'historyData':
-          // handled by HistoryPanel
           break;
         case 'providerStatus':
           setProviderStatus(message.data);
@@ -171,9 +170,26 @@ function App() {
     setToasts(prev => prev.filter(t => t.id !== id));
   };
 
+  const toastStyles = {
+    success: {
+      bg: 'bg-[var(--vscode-inputValidation-infoBackground,#22c55e33)]',
+      border: 'border-[var(--vscode-inputValidation-infoBorder,#22c55e)]',
+      text: 'text-[var(--vscode-inputValidation-infoForeground,#bbf7d0)]',
+    },
+    error: {
+      bg: 'bg-[var(--vscode-inputValidation-errorBackground,#ef444433)]',
+      border: 'border-[var(--vscode-inputValidation-errorBorder,#ef4444)]',
+      text: 'text-[var(--vscode-inputValidation-errorForeground,#fecaca)]',
+    },
+    info: {
+      bg: 'bg-[var(--vscode-inputValidation-infoBackground,#3b82f633)]',
+      border: 'border-[var(--vscode-inputValidation-infoBorder,#3b82f6)]',
+      text: 'text-[var(--vscode-inputValidation-infoForeground,#bfdbfe)]',
+    },
+  };
+
   return (
     <div className={`flex flex-col text-[var(--vscode-foreground)] bg-[var(--vscode-editor-background)] ${isSidebarMode ? 'h-full' : 'h-screen'}`}>
-      {/* Top tab bar */}
       <nav className="flex items-center border-b border-[var(--vscode-panel-border)] bg-[var(--vscode-sideBar-background)] px-2">
         <div className="flex items-center gap-1 py-1.5">
           {navItems.map(item => {
@@ -188,7 +204,7 @@ function App() {
                     : 'hover:bg-[var(--vscode-list-hoverBackground)] opacity-80'
                 }`}
               >
-                <Icon className="w-4 h-4 text-blue-500" />
+                <Icon className="w-4 h-4 text-[var(--vscode-button-background)]" />
                 <span>{item.label}</span>
               </button>
             );
@@ -202,17 +218,16 @@ function App() {
                   : 'hover:bg-[var(--vscode-list-hoverBackground)] opacity-80'
               }`}
             >
-              <BarChart3 className="w-4 h-4 text-green-500" />
+              <BarChart3 className="w-4 h-4 text-[var(--vscode-charts-green)]" />
               <span>Results</span>
             </button>
           )}
         </div>
       </nav>
 
-      {/* Main content area */}
       <main className={`flex-1 overflow-auto ${isSidebarMode ? 'p-3' : 'p-5'}`}>
         {error && (
-          <div className="mb-4 p-3 bg-red-900/30 border border-red-500 rounded text-red-300 text-sm flex items-start justify-between">
+          <div className="mb-4 p-3 border rounded text-sm flex items-start justify-between bg-[var(--vscode-inputValidation-errorBackground)] border-[var(--vscode-inputValidation-errorBorder)] text-[var(--vscode-inputValidation-errorForeground)]">
             <span>{error}</span>
             <button onClick={() => setError(null)} className="ml-2 text-sm"><X className="w-4 h-4" /></button>
           </div>
@@ -263,20 +278,16 @@ function App() {
         )}
       </main>
 
-      {/* Toast container */}
       <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
         {toasts.map(toast => (
           <div
             key={toast.id}
             className={`pointer-events-auto flex items-center gap-2 px-4 py-3 rounded shadow-lg text-sm min-w-[240px] max-w-[400px] animate-in slide-in-from-right ${
-              toast.type === 'success' ? 'bg-green-800/90 text-green-100 border border-green-600' :
-              toast.type === 'error' ? 'bg-red-800/90 text-red-100 border border-red-600' :
-              'bg-blue-800/90 text-blue-100 border border-blue-600'
-            }`}
+              toastStyles[toast.type].bg} ${toastStyles[toast.type].border} ${toastStyles[toast.type].text}`}
           >
-            {toast.type === 'success' ? <Check className="w-5 h-5 flex-shrink-0 text-green-300" /> :
-             toast.type === 'error' ? <AlertTriangle className="w-5 h-5 flex-shrink-0 text-red-300" /> :
-             <Sparkles className="w-5 h-5 flex-shrink-0 text-blue-300" />}
+            {toast.type === 'success' ? <Check className="w-5 h-5 flex-shrink-0 opacity-80" /> :
+             toast.type === 'error' ? <AlertTriangle className="w-5 h-5 flex-shrink-0 opacity-80" /> :
+             <Sparkles className="w-5 h-5 flex-shrink-0 opacity-80" />}
             <span className="flex-1">{toast.message}</span>
             <button onClick={() => dismissToast(toast.id)} className="flex-shrink-0 opacity-70 hover:opacity-100">
               <X className="w-4 h-4" />

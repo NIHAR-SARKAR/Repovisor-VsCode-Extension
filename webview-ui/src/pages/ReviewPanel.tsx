@@ -44,11 +44,15 @@ export function ReviewPanel({ onReview, providerStatus, isSidebarMode, isLoading
     onReview({ repo, prNumber: parseInt(prNumber), platform, provider: activeProvider.alias, profile, autoPost });
   };
 
+  const buttonBase = 'py-2 rounded text-sm font-medium flex items-center justify-center gap-2 transition-colors';
+  const activePlatformClass = 'bg-[var(--vscode-button-background)] text-[var(--vscode-button-foreground)]';
+  const inactivePlatformClass = 'bg-[var(--vscode-button-secondaryBackground)] text-[var(--vscode-button-secondaryForeground)] hover:bg-[var(--vscode-button-secondaryHoverBackground)]';
+
   return (
     <div className={`space-y-6 ${isSidebarMode ? '' : 'max-w-2xl'}`}>
       <div>
         <h1 className="section-title flex items-center gap-2">
-          <Search className="w-6 h-6 text-blue-500" />
+          <Search className="w-6 h-6 text-[var(--vscode-button-background)]" />
           Review
         </h1>
         <p className="text-sm opacity-70 mt-1">Run AI-powered code reviews on pull requests.</p>
@@ -56,31 +60,31 @@ export function ReviewPanel({ onReview, providerStatus, isSidebarMode, isLoading
 
       <form onSubmit={handleSubmit} className="card space-y-5">
         <div className="subsection-header">
-          <Search className="w-4 h-4 text-blue-500" />
+          <Search className="w-4 h-4 text-[var(--vscode-button-background)]" />
           <span>Pull Request Review</span>
         </div>
 
         {!activeProvider && (
-          <div className="p-3 bg-yellow-900/30 border border-yellow-600 rounded text-sm text-yellow-200 flex items-start gap-2">
+          <div className="p-3 border rounded text-sm flex items-start gap-2 bg-[var(--vscode-inputValidation-warningBackground)] border-[var(--vscode-inputValidation-warningBorder)] text-[var(--vscode-inputValidation-warningForeground)]">
             <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <span>No AI provider configured. Go to <strong>Settings</strong> to set one up.</span>
           </div>
         )}
 
         {activeProvider && (
-          <div className="p-2 bg-blue-900/20 rounded text-sm flex items-center gap-2">
-            <Cpu className="w-4 h-4 text-blue-400" />
+          <div className="p-2 rounded text-sm flex items-center gap-2 bg-[var(--vscode-editor-inactiveSelectionBackground)]">
+            <Cpu className="w-4 h-4 text-[var(--vscode-button-background)]" />
             <span>Active provider: <strong>{activeProvider.name}</strong></span>
           </div>
         )}
 
         <div className="grid grid-cols-2 gap-3">
           <button type="button" onClick={() => setPlatform('github')}
-            className={`py-2 rounded text-sm font-medium flex items-center justify-center gap-2 ${platform === 'github' ? 'bg-blue-600' : 'bg-gray-700'}`}>
+            className={`${buttonBase} ${platform === 'github' ? activePlatformClass : inactivePlatformClass}`}>
             <Server className="w-4 h-4" /> GitHub
           </button>
           <button type="button" onClick={() => setPlatform('gitlab')}
-            className={`py-2 rounded text-sm font-medium flex items-center justify-center gap-2 ${platform === 'gitlab' ? 'bg-orange-600' : 'bg-gray-700'}`}>
+            className={`${buttonBase} ${platform === 'gitlab' ? activePlatformClass : inactivePlatformClass}`}>
             <Server className="w-4 h-4" /> GitLab
           </button>
         </div>
@@ -116,7 +120,7 @@ export function ReviewPanel({ onReview, providerStatus, isSidebarMode, isLoading
         <button type="submit" className="btn-primary w-full py-2 rounded text-sm flex items-center justify-center gap-2" disabled={!activeProvider || isLoading}>
           {isLoading ? (
             <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--vscode-button-foreground)]" />
               Analyzing...
             </>
           ) : (
@@ -129,16 +133,16 @@ export function ReviewPanel({ onReview, providerStatus, isSidebarMode, isLoading
 
       <div className="card space-y-3">
         <div className="subsection-header">
-          <Sparkles className="w-4 h-4 text-blue-500" />
+          <Sparkles className="w-4 h-4 text-[var(--vscode-button-background)]" />
           <span>Quick Actions</span>
         </div>
         <div className="space-y-2">
           <button type="button" onClick={() => vscode.postMessage({ command: 'reviewFile' })}
-            className="w-full py-2 px-3 bg-gray-700 rounded text-sm hover:bg-gray-600 transition-colors text-left flex items-center gap-2">
+            className="w-full py-2 px-3 rounded text-sm transition-colors text-left flex items-center gap-2 bg-[var(--vscode-button-secondaryBackground)] text-[var(--vscode-button-secondaryForeground)] hover:bg-[var(--vscode-button-secondaryHoverBackground)]">
             <Search className="w-4 h-4" /> Review Current File
           </button>
           <button type="button" onClick={() => vscode.postMessage({ command: 'reviewSelection' })}
-            className="w-full py-2 px-3 bg-gray-700 rounded text-sm hover:bg-gray-600 transition-colors text-left flex items-center gap-2">
+            className="w-full py-2 px-3 rounded text-sm transition-colors text-left flex items-center gap-2 bg-[var(--vscode-button-secondaryBackground)] text-[var(--vscode-button-secondaryForeground)] hover:bg-[var(--vscode-button-secondaryHoverBackground)]">
             <Search className="w-4 h-4" /> Review Selected Code
           </button>
         </div>
